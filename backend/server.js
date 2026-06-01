@@ -30,7 +30,22 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 },
 })
 
-app.use(cors({ origin: 'http://localhost:5173' }))
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://xebiaintern.jeevantverma.tech',
+]
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+        return
+      }
+      callback(new Error('Not allowed by CORS'))
+    },
+  }),
+)
 app.use(express.json())
 app.use('/api', limiter)
 app.use('/uploads', express.static(UPLOAD_DIR))
