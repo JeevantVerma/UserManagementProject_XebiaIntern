@@ -6,5 +6,5 @@ backend/.env
 .DS_Store
 Thumbs.db
 frontend/dist/
-backend/uploads/
+backend/uploads/*
 !backend/uploads/.gitkeep

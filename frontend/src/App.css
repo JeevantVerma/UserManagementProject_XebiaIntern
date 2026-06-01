@@ -83,6 +83,12 @@
   font-weight: 600;
 }
 
+.label-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
 .form-grid input,
 .form-grid select {
   border-radius: 12px;

@@ -6,6 +6,9 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 const NAME_REGEX = '^[A-Za-z ]{2,}$'
 const CONTACT_REGEX = '^\\d{7,15}$'
 const PASSWORD_REGEX = '^.{6,}$'
+const NAME_REGEX_LABEL = 'Use at least 2 letters (A-Z) and spaces'
+const CONTACT_REGEX_LABEL = 'Use 7 to 15 digits only'
+const PASSWORD_REGEX_LABEL = 'Use at least 6 characters'
 
 const emptyUserForm = {
   name: '',
@@ -135,7 +138,9 @@ function LoginPage({ currentUser, onLoginSuccess }) {
       </div>
       <form onSubmit={handleSubmit} className="form-grid">
         <label>
-          Email <span className="required">*</span>
+          <span className="label-text">
+            Email <span className="required">*</span>
+          </span>
           <input
             type="email"
             name="email"
@@ -146,7 +151,9 @@ function LoginPage({ currentUser, onLoginSuccess }) {
           />
         </label>
         <label>
-          Password <span className="required">*</span>
+          <span className="label-text">
+            Password <span className="required">*</span>
+          </span>
           <input
             type="password"
             name="password"
@@ -155,9 +162,9 @@ function LoginPage({ currentUser, onLoginSuccess }) {
             placeholder="Enter your password"
             required
             pattern={PASSWORD_REGEX}
-            title="Regex: ^.{6,}$"
+            title={PASSWORD_REGEX_LABEL}
           />
-          <span className="helper">Regex: ^.{6,}$</span>
+          <span className="helper">{PASSWORD_REGEX_LABEL}</span>
         </label>
         {error ? <p className="error">{error}</p> : null}
         {message ? <p className="success">{message}</p> : null}
@@ -275,12 +282,12 @@ function AdminPage({ currentUser }) {
   const userCountLabel = useMemo(() => {
     const adminCount = users.filter((entry) => entry.role === 'admin').length
     const userCount = users.filter((entry) => entry.role === 'user').length
-    return `${adminCount} admins, ${userCount} users`
+    return `${adminCount} admin(s), ${userCount} user(s)`
   }, [users])
 
   if (!currentUser || currentUser.role !== 'admin') {
     return null
-  }
+  } 
 
   return (
     <section className="admin-grid">
@@ -294,7 +301,9 @@ function AdminPage({ currentUser }) {
         </div>
         <form onSubmit={handleSubmit} className="form-grid">
           <label>
-            Name <span className="required">*</span>
+            <span className="label-text">
+              Name <span className="required">*</span>
+            </span>
             <input
               type="text"
               name="name"
@@ -303,13 +312,15 @@ function AdminPage({ currentUser }) {
               placeholder="Full name"
               required
               pattern={NAME_REGEX}
-              title="Regex: ^[A-Za-z ]{2,}$"
+              title={NAME_REGEX_LABEL}
             />
-            <span className="helper">Regex: ^[A-Za-z ]{2,}$</span>
+            <span className="helper">{NAME_REGEX_LABEL}</span>
             {errors.name ? <span className="field-error">{errors.name}</span> : null}
           </label>
           <label>
-            Email <span className="required">*</span>
+            <span className="label-text">
+              Email <span className="required">*</span>
+            </span>
             <input
               type="email"
               name="email"
@@ -321,7 +332,9 @@ function AdminPage({ currentUser }) {
             {errors.email ? <span className="field-error">{errors.email}</span> : null}
           </label>
           <label>
-            Contact <span className="required">*</span>
+            <span className="label-text">
+              Contact <span className="required">*</span>
+            </span>
             <input
               type="tel"
               name="contact"
@@ -330,15 +343,17 @@ function AdminPage({ currentUser }) {
               placeholder="10-digit number"
               required
               pattern={CONTACT_REGEX}
-              title="Regex: ^\\d{7,15}$"
+              title={CONTACT_REGEX_LABEL}
             />
-            <span className="helper">Regex: ^\d{7,15}$</span>
+            <span className="helper">{CONTACT_REGEX_LABEL}</span>
             {errors.contact ? (
               <span className="field-error">{errors.contact}</span>
             ) : null}
           </label>
           <label>
-            Password <span className="required">*</span>
+            <span className="label-text">
+              Password <span className="required">*</span>
+            </span>
             <input
               type="password"
               name="password"
@@ -347,15 +362,17 @@ function AdminPage({ currentUser }) {
               placeholder="Minimum 6 characters"
               required
               pattern={PASSWORD_REGEX}
-              title="Regex: ^.{6,}$"
+              title={PASSWORD_REGEX_LABEL}
             />
-            <span className="helper">Regex: ^.{6,}$</span>
+            <span className="helper">{PASSWORD_REGEX_LABEL}</span>
             {errors.password ? (
               <span className="field-error">{errors.password}</span>
             ) : null}
           </label>
           <label>
-            Role <span className="required">*</span>
+            <span className="label-text">
+              Role <span className="required">*</span>
+            </span>
             <select name="role" value={form.role} onChange={handleChange} required>
               <option value="admin">Admin</option>
               <option value="user">User</option>
@@ -363,7 +380,9 @@ function AdminPage({ currentUser }) {
             {errors.role ? <span className="field-error">{errors.role}</span> : null}
           </label>
           <label>
-            Profile picture <span className="required">*</span>
+            <span className="label-text">
+              Profile picture <span className="required">*</span>
+            </span>
             <input
               type="file"
               name="profilePicture"
