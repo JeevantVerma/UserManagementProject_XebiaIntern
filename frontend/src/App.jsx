@@ -229,6 +229,31 @@ function AdminPage({ currentUser }) {
     }
   }
 
+  const toggleUserStatus = async (entry) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/users/${entry.id}/status`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isActive: !entry.isActive }),
+        },
+      )
+
+      if (!response.ok) {
+        setStatus('Unable to update user status.')
+        return
+      }
+
+      const updatedUser = await response.json()
+      setUsers((prev) =>
+        prev.map((user) => (user.id === updatedUser.id ? updatedUser : user)),
+      )
+    } catch {
+      setStatus('Network error. Try again.')
+    }
+  }
+
   useEffect(() => {
     loadUsers()
   }, [])
@@ -413,7 +438,10 @@ function AdminPage({ currentUser }) {
             <p className="muted">No users yet.</p>
           ) : (
             users.map((entry) => (
-              <article className="user-card" key={entry.id}>
+              <article
+                className={`user-card ${entry.isActive === false ? 'is-disabled' : ''}`}
+                key={entry.id}
+              >
                 {entry.profilePicture ? (
                   <img
                     src={`${API_BASE}${entry.profilePicture}`}
@@ -428,8 +456,20 @@ function AdminPage({ currentUser }) {
                   <p className="name">{entry.name}</p>
                   <p className="meta">{entry.email}</p>
                   <p className="meta">{entry.contact}</p>
+                  <p className="meta">
+                    Status: {entry.isActive === false ? 'Disabled' : 'Active'}
+                  </p>
                 </div>
-                <span className="role-tag">{entry.role}</span>
+                <div className="user-actions">
+                  <span className="role-tag">{entry.role}</span>
+                  <button
+                    className="ghost small"
+                    type="button"
+                    onClick={() => toggleUserStatus(entry)}
+                  >
+                    {entry.isActive === false ? 'Enable' : 'Disable'}
+                  </button>
+                </div>
               </article>
             ))
           )}

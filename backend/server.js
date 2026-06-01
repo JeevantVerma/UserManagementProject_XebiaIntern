@@ -70,6 +70,7 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ['admin', 'user'], required: true },
     password: { type: String, required: true },
     profilePicture: { type: String, default: '' },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } },
 )
@@ -83,6 +84,7 @@ const sanitizeUser = (user) => ({
   contact: user.contact,
   role: user.role,
   profilePicture: user.profilePicture || '',
+  isActive: user.isActive !== false,
   createdAt: user.createdAt,
 })
 
@@ -126,6 +128,10 @@ app.post('/api/auth/login', async (req, res) => {
 
   if (!user) {
     return res.status(401).json({ message: 'Invalid credentials' })
+  }
+
+  if (user.isActive === false) {
+    return res.status(403).json({ message: 'Account is disabled' })
   }
 
   return res.json({
@@ -175,6 +181,27 @@ app.post('/api/users', upload.single('profilePicture'), async (req, res) => {
   return res.status(201).json(sanitizeUser(newUser))
 })
 
+app.patch('/api/users/:id/status', async (req, res) => {
+  const { id } = req.params
+  const { isActive } = req.body || {}
+
+  if (typeof isActive !== 'boolean') {
+    return res.status(400).json({ message: 'isActive must be boolean' })
+  }
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    { isActive },
+    { new: true },
+  )
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' })
+  }
+
+  return res.json(sanitizeUser(user))
+})
+
 const ensureAdminSeed = async () => {
   const adminExists = await User.exists({ email: 'admin@example.com' })
   if (!adminExists) {
@@ -185,6 +212,7 @@ const ensureAdminSeed = async () => {
       role: 'admin',
       password: 'admin123',
       profilePicture: '',
+      isActive: true,
     })
   }
 }

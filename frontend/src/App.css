@@ -40,6 +40,11 @@
   border-radius: 999px;
 }
 
+.ghost.small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 .card {
   background: var(--panel);
   border-radius: 20px;
@@ -216,6 +221,10 @@
   background: var(--chip);
 }
 
+.user-card.is-disabled {
+  opacity: 0.7;
+}
+
 .user-card img,
 .avatar-fallback {
   width: 56px;
@@ -248,6 +257,12 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.user-actions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
 }
 
 .pill {
