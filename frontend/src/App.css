@@ -306,3 +306,39 @@
     margin: 0 20px 24px;
   }
 }
+
+@media (max-width: 640px) {
+  .top-bar {
+    padding: 24px 20px 0;
+  }
+
+  .top-bar h1 {
+    font-size: 28px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .user-card {
+    grid-template-columns: 48px 1fr;
+    grid-template-areas:
+      "avatar info"
+      "actions actions";
+  }
+
+  .user-card img,
+  .avatar-fallback {
+    width: 48px;
+    height: 48px;
+  }
+
+  .user-actions {
+    grid-area: actions;
+    justify-items: start;
+  }
+}
